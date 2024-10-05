@@ -107,4 +107,39 @@
 ```
 </details>
 
+❓ Maximize the Total Height of Unique Towers
+- LC_Array_M_22_0_`MergingSortedArray`_06102024 <br>
+- Optimization : Merge and store in a new array in a single for loop in O(log(m+n))
+<details>
+<summary>Optimal code</summary>
+  
+```cpp []
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        vector<int> arr;
+        int left = 0, right = 0;
 
+        // Merging the arrays
+        while (left < nums1.size() && right < nums2.size()) {
+            if (nums1[left] <= nums2[right]) {
+                arr.push_back(nums1[left++]);
+            } else {
+                arr.push_back(nums2[right++]);
+            }
+        }
+
+        // Add remaining elements
+        while (left < nums1.size()) arr.push_back(nums1[left++]);
+        while (right < nums2.size()) arr.push_back(nums2[right++]);
+
+        // Find the median
+        int size = arr.size();
+        if (size % 2 == 0) {
+            return (arr[size / 2 - 1] + arr[size / 2]) / 2.0;
+        } else {
+            return arr[size / 2];
+        }
+    }
+
+
+```
+</details>
