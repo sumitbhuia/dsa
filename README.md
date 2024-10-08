@@ -1,6 +1,7 @@
 # Good dsa problems
 
-<!--❓ ...
+<!--
+## ❓ ...
 - ... <br>
 - Optimization : ...
 <details>
@@ -12,7 +13,7 @@
 </details>
 -->
 
-❓ Divide Players Into Teams of Equal Skill
+## ❓ Divide Players Into Teams of Equal Skill
 - LC_Array_M_61_32_`Sort&2Pointer&PairSmallestw/Largest`_04102024<br>
 - Optimization : `Frequency array` , bitwise division , handle edge-case early 
 <details>
@@ -73,7 +74,7 @@
 
 
 
-❓ Permutation in String
+## ❓ Permutation in String
 - LC_String_M_9_6_`FreqArray`_5102024 <br>
 - Optimization : `Sliding Window`
 - Pattern : Apply sliding window when you need to find pattern/sum in a subarray/substring
@@ -107,8 +108,8 @@
 ```
 </details>
 
-❓ Maximize the Total Height of Unique Towers
-- LC_Array_M_22_0_`MergingSortedArray`_06102024 <br>
+## ❓ Maximize the Total Height of Unique Towers
+- LC_Array_M_22_`Wrong/MergingSortedArray`_06102024 <br>
 - Optimization : Merge and store in a new array in a single for loop in O(log(m+n))
 <details>
 <summary>Optimal code</summary>
@@ -143,3 +144,139 @@
 
 ```
 </details>
+
+## ❓ Sentence Similarity III
+- LC_String_M_5_`Wrong`06102024 <br>
+- Optimization : `Split String to Words`
+<details>
+<summary>Optimal code</summary>
+  
+```cpp []
+  class Solution {
+public:
+    bool areSentencesSimilar(string sentence1, string sentence2) {
+        // If sentence2 is longer, swap them for consistency
+        if (sentence1.length() < sentence2.length()) {
+            swap(sentence1, sentence2);
+        }
+        
+        // Split sentences into words
+        vector<string> words1 = split(sentence1);
+        vector<string> words2 = split(sentence2);
+        
+        int n = words1.size();
+        int m = words2.size();
+        
+        // Check matching words from the start , m is the smaller sentence
+        int i = 0;
+        while (i < m && words1[i] == words2[i]) {
+            i++;
+        }
+        
+        // Check matching words from the end
+        int j = 0;
+        while (j < m && words1[n - 1 - j] == words2[m - 1 - j]) {
+            j++;
+        }
+        
+        // matching from the start , counting matched words , matching from the back counting matched words
+        // If all the words from the smaller sentence are continous in the bigger sentence the matched count should be >= to smaller sentence length . Meaning smaller is continuos and words are present in bigger one . 
+        return i + j >= m;
+    }
+    
+private:
+    // Helper function to split a sentence into words
+    vector<string> split(const string& s) {
+        istringstream iss(s);
+        vector<string> words;
+        string word;
+        while (iss >> word) {
+            words.push_back(word);
+        }
+        return words;
+    }
+};
+```
+</details>
+
+## ❓ Minimum String Length After Removing Substrings
+- LC_String_E_3_`Wrong/letter-wise-elimination`_07102024 <br>
+- Optimization : `Seperate ans string`,`Push Pop in string ` used as a `stack` . 
+<details>
+<summary>Optimal code</summary>
+  
+```cpp []
+  #pragma GCC optimize("O3", "unroll-loops","Ofast")
+class Solution {
+public:
+    int minLength(string s) {
+        ios_base::sync_with_stdio(0); 
+        cin.tie(0); 
+        cout.tie(0);
+
+
+        if(s.length() == 1){ return 1;}
+
+        string ans = "";
+
+        for( auto c : s){
+            // if ans is not empty & last element is A & current element is B . Remove A .
+            if(!ans.empty() && c=='B' && ans.back()=='A'){ ans.pop_back();}
+            // Same for C & D , remove C
+            else if(!ans.empty() && c=='D' && ans.back()=='C'){ ans.pop_back();}
+            // Else add them to string 'ans'. 
+            else{ ans.push_back(c);}
+
+        }
+        //Return the size of 'ans'.
+        return ans.size();
+
+    }
+
+};
+```
+</details>
+
+
+## ❓ Minimum Number of Swaps to Make the String Balanced
+- LC_String_M_41_`Wrong/Brute-force/If-else` <br>
+- Optimization : Just count swaps , no actual swaps required , if a bracket is out of place assume it to be swapped and treat it like a swapped item w/ with surrounding . 
+<details>
+<summary>Optimal code</summary>
+  
+```cpp []
+  #pragma GCC optimize("O3", "unroll-loops","Ofast")
+class Solution {
+public:
+    int minSwaps(string s) {
+        ios_base::sync_with_stdio(0); 
+        cin.tie(0); 
+        cout.tie(0);
+        int left_bracket = 0 ,swaps = 0;
+
+    for (char c : s) {
+        if (c == ']') {
+             if(left_bracket==0) {
+                    // Right brkt , assumed as left . If swap happens.
+                    left_bracket++;
+                    // As there are no left brackets , and finding a right bracket is out of order . So swap needed. 
+                    swaps++;
+            }
+            else{
+        // Cancelling non-zero left brkt if right brkt found.
+                left_bracket--;
+            }
+        }
+        else{
+            // Increase left brkt.
+            left_bracket++;
+        } 
+    }
+      return swaps;
+    }
+};
+
+```
+</details>
+
+
