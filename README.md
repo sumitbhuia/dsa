@@ -279,4 +279,37 @@ public:
 ```
 </details>
 
+## ❓ Maximum Width Ramp
+- LC_Stack_30_`Wrong/If-else`_11102024 <br>
+- Optimization : `Monotonic stack`
+<details>
+<summary>Optimal code</summary>
+  
+```cpp []
+  #pragma GCC optimize("O3", "unroll-loops","Ofast")
+class Solution {
+public:
+    int maxWidthRamp(vector<int>& nums) {
+        ios_base::sync_with_stdio(0); 
+        cin.tie(0); 
+        cout.tie(0);
+        stack<int>st;
+        int ans = INT_MIN;
+        for(int i =0 ; i<nums.size();i++){
+            if(st.empty() ||  nums[st.top()]>nums[i]) st.push(i);
+        }
 
+        for(int j = nums.size()-1 ; j>=0 ;j-- ){
+            while(!st.empty() && nums[st.top()]<=nums[j]){
+                ans = max(ans , j - st.top());
+                st.pop();
+            }
+            
+            
+        }
+        return ans;
+       
+    }
+};
+```
+</details>
