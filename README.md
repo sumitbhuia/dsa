@@ -12,6 +12,38 @@
 ```
 </details>
 -->
+## ❓ Maximal Score After Applying K Operations
+- LC_Heap_M_`Solved`_141024 <br>
+- Optimization : `Max-heap`
+<details>
+<summary>Optimal code</summary>
+  
+```cpp []
+  #pragma GCC optimize("O3", "unroll-loops","Ofast")
+class Solution {
+public:
+    long long maxKelements(vector<int>& nums, int k) {
+        ios_base::sync_with_stdio(0); 
+        cin.tie(0); 
+        cout.tie(0);
+        priority_queue<long long> heap(nums.begin(), nums.end());
+        long long score = 0 ; 
+
+        for(int i = 0; i<k; i++){
+            long long val= heap.top();
+            score +=val;
+            long long nval = ceil((val/3.0));
+            heap.pop();
+            heap.push(nval);
+        }
+        return score;
+
+        
+    }
+};
+```
+</details>
+
 
 ## ❓ Divide Players Into Teams of Equal Skill
 - LC_Array_M_61_32_`Sort&2Pointer&PairSmallestw/Largest`_04102024<br>
@@ -239,7 +271,7 @@ public:
 
 
 ## ❓ Minimum Number of Swaps to Make the String Balanced
-- LC_String_M_41_`Wrong/Brute-force/If-else` <br>
+- LC_String_M_41_`Wrong/Brute-force/If-else`_081024 <br>
 - Optimization : Just count swaps , no actual swaps required , if a bracket is out of place assume it to be swapped and treat it like a swapped item w/ with surrounding . 
 <details>
 <summary>Optimal code</summary>
@@ -280,8 +312,8 @@ public:
 </details>
 
 ## ❓ Maximum Width Ramp
-- LC_Stack_30_`Wrong/If-else`_11102024 <br>
-- Optimization : `Monotonic stack`
+- LC_Stack_M_30_`Wrong/If-else`_10102024 <br>
+- Optimization : `Monotonic stack`: Stack in decreasing order
 <details>
 <summary>Optimal code</summary>
   
@@ -313,3 +345,184 @@ public:
 };
 ```
 </details>
+
+## ❓ The Number of the Smallest Unoccupied Chair
+- LC_Heap_M_`O(NlogK)`_`Copied`_111024 <br>
+- Optimization : `Min-Heap` , maintain 2 heaps for occupied and unoccupied chairs and constantly update both .
+<details>
+<summary>Optimal code</summary>
+  
+```cpp []
+  class Solution {
+public:
+    int smallestChair(vector<vector<int>>& times, int targetFriend) {
+        int n = times.size();
+        
+        // Store the friends with their indices (0, 1, ..., n-1)
+        vector<pair<int, int>> friends;
+        for (int i = 0; i < n; i++) {
+            friends.push_back({times[i][0], i});  // {arrival_time, friend_index}
+        }
+        
+        // Sort the friends by arrival time
+        sort(friends.begin(), friends.end());
+
+        // Min-heap to store available chairs (smallest chair numbers)
+        priority_queue<int, vector<int>, greater<int>> availableChairs;
+        for (int i = 0; i < n; i++) {
+            availableChairs.push(i);  // Initially, all chairs are available
+        }
+
+        // Min-heap to store occupied chairs and the time they will be free: {leaving_time, chair_number}
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> occupiedChairs;
+
+        for (const auto& [arrivalTime, friendIndex] : friends) {
+            // Free up chairs that are now available
+            while (!occupiedChairs.empty() && occupiedChairs.top().first <= arrivalTime) {
+                availableChairs.push(occupiedChairs.top().second);
+                occupiedChairs.pop();
+            }
+            
+            // Assign the smallest available chair to the current friend
+            int assignedChair = availableChairs.top();
+            availableChairs.pop();
+            
+            // Record when this friend will leave and free up their chair
+            occupiedChairs.push({times[friendIndex][1], assignedChair});
+            
+            // If this is the target friend, return their chair
+            if (friendIndex == targetFriend) {
+                return assignedChair;
+            }
+        }
+
+        return -1;  // This line should never be reached
+    }
+};
+```
+</details>
+
+## ❓ Divide Intervals Into Minimum Number of Groups
+- LC_M_Prefix-Sum/Heap_`Copied`_121024 <br>
+- Optimization : `Prefix sum`, in an vector using `start` and `end+1` intevals as indexes , assign values +1 and -1 . Add them and consecutively and maintain a max.
+<details>
+<summary>Optimal code</summary>
+  
+```cpp []
+ class Solution {
+public:
+    int minGroups(vector<vector<int>>& intervals) {
+        vector<pair<int, int>> events;
+        
+        // Convert intervals into events: +1 for start, -1 for end+1
+        for (const auto& interval : intervals) {
+            events.emplace_back(interval[0], 1);        // Start of an interval
+            events.emplace_back(interval[1] + 1, -1);   // End of an interval (non-inclusive)
+        }
+
+        // Sort events by time
+        sort(events.begin(), events.end());
+
+        int maxGroups = 0, currentGroups = 0;
+
+        // Process events in sorted order
+        for (const auto& event : events) {
+            currentGroups += event.second;  // Update active groups count
+            maxGroups = max(maxGroups, currentGroups);  // Track the max number of groups
+        }
+
+        return maxGroups;
+    }
+};
+```
+</details>
+
+- Optimization : `min-heap` , the number of overlaps = the number of groups required . Find max number of overlapping intervals.
+<details>
+<summary>Optimal code</summary>
+
+```cpp []
+  class Solution {
+public:
+    int minGroups(vector<vector<int>>& intervals) {
+        // Sort intervals by their start times
+        sort(intervals.begin(), intervals.end());
+
+        // Min-heap (priority queue) to store the end times of ongoing groups
+        priority_queue<int, vector<int>, greater<int>> pq;
+
+        for (const auto& interval : intervals) {
+            int start = interval[0];
+            int end = interval[1];
+
+            // If the earliest ending interval ends before the current one starts, remove it
+            if (!pq.empty() && pq.top() < start) {
+                pq.pop();
+            }
+
+            // Add the current interval's end time to the priority queue
+            pq.push(end);
+        }
+
+        // The size of the priority queue will be the maximum number of overlapping intervals
+        return pq.size();
+    }
+};
+```
+</details>
+
+## ❓ Smallest Range Covering Elements from K Lists
+- LC_Heap_H_`Copied`_131024 <br>
+- Optimization :
+  - Imagine a 2D matrix , a `sliding window` of the entire first columns ,put the window in a `min-heap` , remove the smallest element from the window and move forward in that list by 1.
+  - Maintain a differece of max-min in the window update max everytime .
+  - Update max for every new value in the window , and top() in always the min in `min-heap` . 
+<details>
+<summary>Optimal code</summary>
+  
+```cpp []
+  class Solution {
+public:
+    vector<int> smallestRange(vector<vector<int>>& nums) {
+        // Min-Heap: stores (value, list index, element index)
+        priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> minHeap;
+        int curMax = INT_MIN;
+
+        // Initialize the heap with the first element of each list
+        for (int i = 0; i < nums.size(); i++) {
+            minHeap.push({nums[i][0], i, 0});
+            curMax = max(curMax, nums[i][0]);
+        }
+        // Track the smallest range
+        vector<int> smallRange = {0,INT_MAX};
+
+        while (!minHeap.empty()) {
+            // Get the minimum element from the heap
+            vector<int> curr = minHeap.top();
+            minHeap.pop();
+            int curMin = curr[0], listIdx = curr[1], elemIdx = curr[2];
+
+            // Update the smallest range if a better one is found
+            if (curMax - curMin < smallRange[1] - smallRange[0]) {
+                smallRange[0] = curMin;
+                smallRange[1] = curMax;
+            }
+
+            // Move to the next element in the same list
+            if (elemIdx + 1 < nums[listIdx].size()) {
+                int nextVal = nums[listIdx][elemIdx + 1];
+                minHeap.push({nextVal, listIdx, elemIdx + 1});
+                curMax = max(curMax, nextVal);
+            } else {
+                // If any list is exhausted, stop
+                break;
+            }
+        }
+        return smallRange;
+    }
+};
+```
+</details>
+
+
+
