@@ -12,6 +12,7 @@
 ```
 </details>
 -->
+
 ## ❓ Separate Black and White Balls
 - LC_String_M_`Solved`_151024 <br>
 - Optimization : No. of zeros ahead of 1 = No. of swaps required to seperate . 
@@ -39,6 +40,7 @@ public:
 };
 ```
 </details>
+
 ## ❓ Maximal Score After Applying K Operations
 - LC_Heap_M_`Solved`_141024 <br>
 - Optimization : `Max-heap`
