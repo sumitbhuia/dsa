@@ -12,6 +12,33 @@
 ```
 </details>
 -->
+## ❓ Separate Black and White Balls
+- LC_String_M_`Solved`_151024 <br>
+- Optimization : No. of zeros ahead of 1 = No. of swaps required to seperate . 
+<details>
+<summary>Optimal code</summary>
+  
+```cpp []
+   #pragma GCC optimize("O3", "unroll-loops","Ofast")
+class Solution {
+public:
+    long long minimumSteps(string s) {
+        ios_base::sync_with_stdio(0); 
+        cin.tie(0); 
+        cout.tie(0);
+
+        long long steps = 0 ,cnt=0;
+        if (s.length()==1) return 0;
+
+        for(int i = s.length()-1 ; i >= 0  ; i--){
+            if(s[i]== '0') cnt++ ;
+            else steps += cnt;
+        }
+        return steps;         
+    }
+};
+```
+</details>
 ## ❓ Maximal Score After Applying K Operations
 - LC_Heap_M_`Solved`_141024 <br>
 - Optimization : `Max-heap`
