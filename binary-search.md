@@ -168,7 +168,7 @@ int findPages(vector<int>& arr, int n, int m) {
 
 
 ## ❓Agressive Cows
-- [Link](https://www.spoj.com/problems/AGGRCOW/) <br>
+- [Link]([https://www.spoj.com/problems/AGGRCOW/](https://www.geeksforgeeks.org/problems/aggressive-cows/0)) <br>
 - TC : `O(nlogn)`
 - Pattern : These type of question ask max(min) or min(max) 
 <details>
